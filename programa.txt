@@ -1,0 +1,7 @@
+
+int edad = 20;
+float precio = 50;
+
+if (edad) {
+    precio = precio + 10;
+}

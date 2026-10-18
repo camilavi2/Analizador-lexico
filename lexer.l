@@ -1,0 +1,62 @@
+
+
+%option noyywrap
+%{
+#include <stdio.h>
+%}
+
+%%
+
+"int"|"float"|"if"|"else"|"while" {
+    fprintf(yyout, "Reservada: %s\n", yytext);
+}
+
+[0-9]+ {
+    fprintf(yyout, "Numero: %s\n", yytext);
+}
+
+[a-zA-Z_][a-zA-Z0-9_]* {
+    fprintf(yyout, "Identificador: %s\n", yytext);
+}
+
+[=+*/-] {
+    fprintf(yyout, "Operador: %s\n", yytext);
+}
+
+[;(){}] {
+    fprintf(yyout, "Separador: %s\n", yytext);
+}
+
+[ \t\r\n]+ {
+    /* Ignorar espacios y saltos de linea */
+}
+
+. {
+    fprintf(yyout, "Desconocido: %s\n", yytext);
+}
+
+%%
+
+int main(void) {
+    yyin = fopen("programa.txt", "r");
+
+    if (yyin == NULL) {
+        printf("Error al abrir programa.txt\n");
+        return 1;
+    }
+
+    yyout = fopen("out.txt", "w");
+
+    if (yyout == NULL) {
+        printf("Error al crear out.txt\n");
+        fclose(yyin);
+        return 1;
+    }
+
+    yylex();
+
+    fclose(yyin);
+    fclose(yyout);
+
+    return 0;
+}
